@@ -1,0 +1,69 @@
+table FactObjectifs
+	lineageTag: bca7d140-55eb-4838-b219-34e6e555e763
+
+	column Mois
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 7688dcc5-1abf-4761-a725-7f0923c1b567
+		summarizeBy: none
+		sourceColumn: Mois
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column StoreID
+		dataType: string
+		lineageTag: c930b42f-1ef5-43f1-8cf3-c39baf0657ce
+		summarizeBy: none
+		sourceColumn: StoreID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Categorie
+		dataType: string
+		lineageTag: 94be1381-2143-4d27-84b1-b3612b1f9b59
+		summarizeBy: none
+		sourceColumn: Categorie
+
+		annotation SummarizationSetBy = Automatic
+
+	column Objectif_CA
+		dataType: decimal
+		formatString: "£"#,0.###############;-"£"#,0.###############;"£"#,0.###############
+		lineageTag: cf57d1eb-4fe8-4085-96e7-4367e7e5b9e9
+		summarizeBy: sum
+		sourceColumn: Objectif_CA
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	column Objectif_Marge
+		dataType: decimal
+		formatString: "£"#,0.###############;-"£"#,0.###############;"£"#,0.###############
+		lineageTag: dc77a3e2-23ec-44da-867c-9dc881b15142
+		summarizeBy: sum
+		sourceColumn: Objectif_Marge
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	partition FactObjectifs = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\phich\OneDrive\Documents\IAE\class\BI\Eval 1\Jeu_donnees_Evaluation_PowerBI_2026.xlsx"), null, true),
+				    TargetsSheet = Source{[Item="Objectifs_Mensuels",Kind="Sheet"]}[Data],
+				    PromotedHeaders = Table.PromoteHeaders(TargetsSheet, [PromoteAllScalars=true]),
+				    TrimmedText = Table.TransformColumns(PromotedHeaders, {{"StoreID", Text.Trim}, {"Categorie", Text.Trim}}),
+				    ChangedTypes = Table.TransformColumnTypes(TrimmedText, {{"Mois", type date}, {"StoreID", type text}, {"Categorie", type text}, {"Objectif_CA", Currency.Type}, {"Objectif_Marge", Currency.Type}}),
+				    RemovedDuplicates = Table.Distinct(ChangedTypes, {"Mois", "StoreID", "Categorie"})
+				in
+				    RemovedDuplicates
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

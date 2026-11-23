@@ -1,0 +1,28 @@
+relationship AutoDetected_6b387990-82e4-4ef7-83ae-b8124aecf5de
+	fromColumn: FactObjectifs.Categorie
+	toColumn: DimCategorie.Categorie
+
+relationship AutoDetected_29d91b84-528c-4ac3-9ab8-90694a62c46b
+	fromColumn: FactVentes.Categorie
+	toColumn: DimCategorie.Categorie
+
+relationship AutoDetected_9e541941-c8fe-4ce0-a312-7b1751e18976
+	fromColumn: FactObjectifs.StoreID
+	toColumn: DimMagasin.StoreID
+
+relationship AutoDetected_0832678a-31ad-479e-afc6-7e60ad0503f7
+	fromColumn: FactVentes.StoreID
+	toColumn: DimMagasin.StoreID
+
+relationship AutoDetected_21ef09d6-000e-40d2-9331-cc6f744df765
+	fromColumn: FactVentes.PromoFlag
+	toColumn: DimPromo.PromoFlag
+
+relationship 15512532-0ccc-9d75-3670-6cf25dcb78fd
+	fromColumn: FactVentes.Date
+	toColumn: DimDate.Date
+
+relationship 2984c6fd-f630-708f-1be7-d47434174048
+	fromColumn: FactObjectifs.Mois
+	toColumn: DimDate.Date
+

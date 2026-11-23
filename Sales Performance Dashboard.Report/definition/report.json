@@ -1,0 +1,163 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY26SU04",
+      "reportVersionAtImport": {
+        "visual": "2.8.0",
+        "report": "3.2.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "Nuage_Retail8306021969990715.json",
+      "reportVersionAtImport": {
+        "visual": "2.14.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY26SU04",
+          "path": "BaseThemes/CY26SU04.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "cover_053916000670135601.png",
+          "path": "cover_053916000670135601.png",
+          "type": "Image"
+        },
+        {
+          "name": "Donut_Chart6276471880533743.svg",
+          "path": "Donut_Chart6276471880533743.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Donut_Chart8335518857221119.svg",
+          "path": "Donut_Chart8335518857221119.svg",
+          "type": "Image"
+        },
+        {
+          "name": "logo-euro4267364338028663.svg",
+          "path": "logo-euro4267364338028663.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Nuage_Retail8306021969990715.json",
+          "path": "Nuage_Retail8306021969990715.json",
+          "type": "CustomTheme"
+        },
+        {
+          "name": "Payment_Card46983220053066777.svg",
+          "path": "Payment_Card46983220053066777.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Picture13366525859873589.png",
+          "path": "Picture13366525859873589.png",
+          "type": "Image"
+        },
+        {
+          "name": "Property_1=interface,_Property2509932440423782.svg",
+          "path": "Property_1=interface,_Property2509932440423782.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Property_1=interface,_Property7024196591533596.svg",
+          "path": "Property_1=interface,_Property7024196591533596.svg",
+          "type": "Image"
+        },
+        {
+          "name": "trending-up-307689116314238509.svg",
+          "path": "trending-up-307689116314238509.svg",
+          "type": "Image"
+        },
+        {
+          "name": "trophy-award045306305417962434.svg",
+          "path": "trophy-award045306305417962434.svg",
+          "type": "Image"
+        },
+        {
+          "name": "trophy-award27906640707122077.svg",
+          "path": "trophy-award27906640707122077.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Type=stack-2,_Theme=White004539174992515327.svg",
+          "path": "Type=stack-2,_Theme=White004539174992515327.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Type=stack-2,_Theme=White8276332899129188.svg",
+          "path": "Type=stack-2,_Theme=White8276332899129188.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Type=trending-down-3,_Theme=Wh1065094724892125.svg",
+          "path": "Type=trending-down-3,_Theme=Wh1065094724892125.svg",
+          "type": "Image"
+        },
+        {
+          "name": "user-circle45246662662262993.svg",
+          "path": "user-circle45246662662262993.svg",
+          "type": "Image"
+        },
+        {
+          "name": "wallet-outline24545679620460936.svg",
+          "path": "wallet-outline24545679620460936.svg",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  }
+}

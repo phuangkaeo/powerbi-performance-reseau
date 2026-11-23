@@ -1,0 +1,120 @@
+table DimMagasin
+	lineageTag: 695191fc-6512-46ac-af54-f39469f02cbf
+
+	column StoreID
+		dataType: string
+		lineageTag: 27728431-4bae-4292-b78c-fbadbf261be6
+		summarizeBy: none
+		sourceColumn: StoreID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StoreName
+		dataType: string
+		lineageTag: 3d89f94e-71cb-487d-916d-77338fd39126
+		summarizeBy: none
+		sourceColumn: StoreName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ville
+		dataType: string
+		lineageTag: cd9b48ff-d428-4e4b-ad2c-aa5711aacfa1
+		summarizeBy: none
+		sourceColumn: Ville
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 7c25019f-6f74-497d-9864-ab4457a4ecb8
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Format
+		dataType: string
+		lineageTag: 05daf975-b151-41e0-b564-85a828612ab8
+		summarizeBy: none
+		sourceColumn: Format
+		sortByColumn: FormatOrdre
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Segment
+		dataType: string
+		lineageTag: a0f0e7bc-3c13-4961-9a01-c41f3266e668
+		summarizeBy: none
+		sourceColumn: Segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column Surface_m2
+		dataType: int64
+		formatString: 0
+		lineageTag: 9ce1d598-2533-4d92-9f8d-e57254de5d4d
+		summarizeBy: sum
+		sourceColumn: Surface_m2
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateOuverture
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8657fda7-b096-485f-b017-2cd74e253d4b
+		summarizeBy: none
+		sourceColumn: DateOuverture
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Magasin
+		dataType: string
+		lineageTag: c1f87cb0-0da1-4488-9905-eca18baa2577
+		summarizeBy: none
+		sourceColumn: Magasin
+
+		annotation SummarizationSetBy = Automatic
+
+	column FormatOrdre
+		dataType: int64
+		formatString: 0
+		lineageTag: 116b5fee-0a80-403f-bf24-b86f8e4d0fb2
+		summarizeBy: sum
+		sourceColumn: FormatOrdre
+
+		annotation SummarizationSetBy = Automatic
+
+	column TrancheSurface
+		dataType: string
+		lineageTag: 19527bf2-a353-4692-b4fb-2e14f270e604
+		summarizeBy: none
+		sourceColumn: TrancheSurface
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimMagasin = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\phich\OneDrive\Documents\IAE\class\BI\Eval 1\Jeu_donnees_Evaluation_PowerBI_2026.xlsx"), null, true),
+				    StoreSheet = Source{[Item="DimMagasin",Kind="Sheet"]}[Data],
+				    PromotedHeaders = Table.PromoteHeaders(StoreSheet, [PromoteAllScalars=true]),
+				    TrimmedText = Table.TransformColumns(PromotedHeaders, {{"StoreID", Text.Trim},{"StoreName", Text.Trim},{"Ville", Text.Trim},{"Region", Text.Trim},{"Format", Text.Trim},{"Segment", Text.Trim}}),
+				    ChangedTypes = Table.TransformColumnTypes(TrimmedText, {{"StoreID", type text},{"StoreName", type text},{"Ville", type text},{"Region", type text},{"Format", type text},{"Segment", type text},{"Surface_m2", Int64.Type},{"DateOuverture", type date}}),
+				    FixedRegion = Table.ReplaceValue(ChangedTypes, each [Region], each if [Ville] = "Villeurbanne" then "Est" else if [Ville] = "Montaudran" then "Sud-Ouest" else [Region], Replacer.ReplaceValue, {"Region"}),
+				    AddedStoreLabel = Table.AddColumn(FixedRegion, "Magasin", each [StoreID] & " - " & [Ville], type text),
+				    AddedFormatOrder = Table.AddColumn(AddedStoreLabel, "FormatOrdre", each if [Format] = "Hyper" then 1 else if [Format] = "Super" then 2 else 3, Int64.Type),
+				    AddedSizeBand = Table.AddColumn(AddedFormatOrder, "TrancheSurface", each if [Surface_m2] < 1500 then "< 1500 m2" else if [Surface_m2] < 5000 then "1500-5000 m2" else "> 5000 m2", type text),
+				    RemovedDuplicateKeys = Table.Distinct(AddedSizeBand, {"StoreID"})
+				in
+				    RemovedDuplicateKeys
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,92 @@
+table DimDate
+	lineageTag: d472a183-0a10-407e-8bf1-4ad1bbdcf9cf
+
+	column Date
+		formatString: General Date
+		lineageTag: 7741599f-1a9b-484a-9174-201be7d6abf7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Année
+		formatString: 0
+		lineageTag: c6df5120-16c6-42fe-9c20-abb46b3cdcbb
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Année]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MoisNum
+		formatString: 0
+		lineageTag: ce6ff720-729a-4549-9a08-43c95fd2c48a
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [MoisNum]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mois
+		lineageTag: 65f9beab-5ad6-447e-9f43-bcb844a72137
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Mois]
+		sortByColumn: MoisNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column AnnéeMois
+		lineageTag: c457a721-91de-40b3-94e7-5ac9def8923c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [AnnéeMois]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Trimestre
+		lineageTag: 30eb5d65-0c6e-4b40-91ce-e1152a9c71e5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Trimestre]
+
+		annotation SummarizationSetBy = Automatic
+
+	column JourSemaineNum
+		formatString: 0
+		lineageTag: 3cead39a-2aa1-43c3-97fb-512a68d2360c
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [JourSemaineNum]
+
+		annotation SummarizationSetBy = Automatic
+
+	column JourSemaine
+		lineageTag: dabfc6fd-1850-4235-81df-3b8ce71e860a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [JourSemaine]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimDate = calculated
+		mode: import
+		source =
+				
+				ADDCOLUMNS(
+				    CALENDAR(
+				        DATE(YEAR(MIN(FactVentes[Date])), 1, 1),
+				        DATE(YEAR(MAX(FactVentes[Date])), 12, 31)
+				    ),
+				    "Année", YEAR([Date]),
+				    "MoisNum", MONTH([Date]),
+				    "Mois", FORMAT([Date], "mmm"),
+				    "AnnéeMois", FORMAT([Date], "yyyy-mm"),
+				    "Trimestre", "T" & QUARTER([Date]),
+				    "JourSemaineNum", WEEKDAY([Date], 2),
+				    "JourSemaine", FORMAT([Date], "ddd")
+				)
+
+	annotation PBI_Id = dddc6a28b0ce42fab301df2cbecbef24
+

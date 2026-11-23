@@ -1,0 +1,48 @@
+table KPI
+	lineageTag: 85093efc-5f80-4cd8-acbb-135ad898b0da
+
+	column KPI
+		lineageTag: be24fa86-85e7-417f-b9b0-205ee0557919
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'KPI Order'
+
+		relatedColumnDetails
+			groupByColumn: 'KPI Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'KPI Fields'
+		isHidden
+		lineageTag: 0aa1ddc8-44d1-4528-b8c3-b997d7572605
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'KPI Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'KPI Order'
+		formatString: 0
+		lineageTag: caba01e6-3005-4550-806a-30345089a0b6
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition KPI = calculated
+		mode: import
+		source =
+				{
+				    ("CA", NAMEOF('measurement'[CA]), 0),
+				    ("Nb Clients", NAMEOF('measurement'[Nb Clients]), 1),
+				    ("Marge", NAMEOF('measurement'[Marge]), 2)
+				}
+
+	annotation PBI_Id = b1ebc5202dff492a888f333fbd12d586
+

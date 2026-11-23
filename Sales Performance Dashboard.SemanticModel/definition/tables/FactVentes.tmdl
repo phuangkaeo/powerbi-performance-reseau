@@ -1,0 +1,119 @@
+table FactVentes
+	lineageTag: 8e1e6b60-ea27-4a00-8aed-e192ffe2c22b
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 3529b333-a122-4eec-b7a6-98813d6be602
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column StoreID
+		dataType: string
+		lineageTag: b7573896-ce24-4009-aa1b-f7e9027e9879
+		summarizeBy: none
+		sourceColumn: StoreID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Categorie
+		dataType: string
+		lineageTag: 55ff5c5b-1543-49a3-97e1-ad49ab9a6164
+		summarizeBy: none
+		sourceColumn: Categorie
+
+		annotation SummarizationSetBy = Automatic
+
+	column TauxRemise
+		dataType: double
+		lineageTag: 8ab65fa6-1fda-4a40-b467-1705bd61ef61
+		summarizeBy: sum
+		sourceColumn: TauxRemise
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UnitesVendues
+		dataType: int64
+		formatString: 0
+		lineageTag: cd0f3357-098a-4c1f-a74d-57756709e412
+		summarizeBy: sum
+		sourceColumn: UnitesVendues
+
+		annotation SummarizationSetBy = Automatic
+
+	column NbClients
+		dataType: int64
+		formatString: 0
+		lineageTag: 71c0748a-e235-4c05-93f2-3602296d0855
+		summarizeBy: sum
+		sourceColumn: NbClients
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChiffreAffaires
+		dataType: decimal
+		formatString: "£"#,0.###############;-"£"#,0.###############;"£"#,0.###############
+		lineageTag: d0bf0118-b5af-4837-b8f1-fd5d2523cc27
+		summarizeBy: sum
+		sourceColumn: ChiffreAffaires
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	column Cout
+		dataType: decimal
+		formatString: "£"#,0.###############;-"£"#,0.###############;"£"#,0.###############
+		lineageTag: 15a784fe-0850-4886-9b8a-4eda8f73d17a
+		summarizeBy: sum
+		sourceColumn: Cout
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	column Marge
+		dataType: decimal
+		formatString: "£"#,0.###############;-"£"#,0.###############;"£"#,0.###############
+		lineageTag: cef5de33-ae9b-4385-9857-fb383c418166
+		summarizeBy: sum
+		sourceColumn: Marge
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	column PromoFlag
+		dataType: int64
+		formatString: 0
+		lineageTag: e91086b6-c4ed-4658-8316-bc686a5ff889
+		summarizeBy: none
+		sourceColumn: PromoFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactVentes = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\phich\OneDrive\Documents\IAE\class\BI\Eval 1\Jeu_donnees_Evaluation_PowerBI_2026.xlsx"), null, true),
+				    SalesSheet = Source{[Item="Ventes_TablePlate",Kind="Sheet"]}[Data],
+				    PromotedHeaders = Table.PromoteHeaders(SalesSheet, [PromoteAllScalars=true]),
+				    TrimmedText = Table.TransformColumns(PromotedHeaders, {{"StoreID", Text.Trim}, {"Categorie", Text.Trim}, {"Promo", Text.Trim}}),
+				    ChangedTypes = Table.TransformColumnTypes(TrimmedText, {{"Date", type date}, {"StoreID", type text}, {"Categorie", type text}, {"Promo", type text}, {"TauxRemise", Percentage.Type}, {"UnitesVendues", Int64.Type}, {"NbClients", Int64.Type}, {"ChiffreAffaires", Currency.Type}, {"Cout", Currency.Type}, {"Marge", Currency.Type}}),
+				    KeptFactColumns = Table.SelectColumns(ChangedTypes, {"Date","StoreID","Categorie","Promo","TauxRemise","UnitesVendues","NbClients","ChiffreAffaires","Cout","Marge"}),
+				    AddedPromoFlag = Table.AddColumn(KeptFactColumns, "PromoFlag", each if [Promo] = "Oui" then 1 else 0, Int64.Type),
+				    RemovedPromoText = Table.RemoveColumns(AddedPromoFlag, {"Promo"})
+				in
+				    RemovedPromoText
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,280 @@
+table measurement
+	lineageTag: 144c3dbb-d2ac-49ca-8177-142e5e44628f
+
+	measure CA = SUM(FactVentes[ChiffreAffaires])
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		displayFolder: 01. KPI
+		lineageTag: cd2e521d-32be-438d-aee6-4e8392d9d171
+
+	measure Marge = SUM(FactVentes[Marge])
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		displayFolder: 01. KPI
+		lineageTag: a766a36a-831d-40a5-a694-ea9978c6c0a4
+
+	measure Coût = SUM(FactVentes[Cout])
+		formatString: "£"#,0.###############;-"£"#,0.###############;"£"#,0.###############
+		displayFolder: 01. KPI
+		lineageTag: 32525c5b-7bef-4f1d-ab13-2b1432644da1
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure Unités = SUM(FactVentes[UnitesVendues])
+		formatString: #,0
+		displayFolder: 01. KPI
+		lineageTag: c93a21bd-8dab-40bf-aedb-b6ef7a1ed2c9
+
+	measure 'Nb Clients' = SUM(FactVentes[NbClients])
+		formatString: #,0
+		displayFolder: 01. KPI
+		lineageTag: 8b8894a2-4ca6-440a-9862-d006c16d1f10
+
+	measure 'Taux de marge' = DIVIDE([Marge], [CA])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 01. KPI
+		lineageTag: 4f5ad6f9-15a6-4809-806a-a5fd046942a3
+
+	measure 'Panier moyen' = DIVIDE([CA], [Nb Clients])
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		displayFolder: 01. KPI
+		lineageTag: c17afafb-6499-4076-b8f8-415bfe342033
+
+	measure 'Prix moyen unitaire' = DIVIDE([CA], [Unités])
+		formatString: "£"#,0.###############;-"£"#,0.###############;"£"#,0.###############
+		displayFolder: 01. KPI
+		lineageTag: 78f6c945-4f74-494a-a8dd-2d5b2d36326c
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'CA par m2' = DIVIDE([CA], SUM(DimMagasin[Surface_m2]))
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		displayFolder: 01. KPI
+		lineageTag: 86aaee1f-68fc-4a8d-8ff9-ddcbb7bec976
+
+	measure 'CA N-1' = CALCULATE([CA], SAMEPERIODLASTYEAR(DimDate[Date]))
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		displayFolder: 02. N-1
+		lineageTag: 2bbda473-9dd4-4d11-b30b-0f1411a8c558
+
+	measure 'Marge N-1' = CALCULATE([Marge], SAMEPERIODLASTYEAR(DimDate[Date]))
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		displayFolder: 02. N-1
+		lineageTag: 923a7ce6-ef5f-4e21-acc0-af1773dd715d
+
+	measure 'Nb Clients N-1' = CALCULATE([Nb Clients], SAMEPERIODLASTYEAR(DimDate[Date]))
+		formatString: 0
+		displayFolder: 02. N-1
+		lineageTag: 511d47b3-c8a3-4de7-aaf7-452c31b17727
+
+	measure 'Panier moyen N-1' = CALCULATE([Panier moyen], SAMEPERIODLASTYEAR(DimDate[Date]))
+		formatString: "£"#,0.###############;-"£"#,0.###############;"£"#,0.###############
+		displayFolder: 02. N-1
+		lineageTag: c59d3943-4957-43ee-afc4-ac14b1b75bc8
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Écart CA' = IF(NOT ISBLANK([CA N-1]), [CA] - [CA N-1])
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		displayFolder: 02. N-1
+		lineageTag: f006b419-10cd-47da-9115-27c3226d4c46
+
+	measure 'Var CA %' = DIVIDE([CA] - [CA N-1], [CA N-1])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 02. N-1
+		lineageTag: 43f5285f-b174-43f8-b32b-1ae628b27c73
+
+	measure 'Var Marge %' = DIVIDE([Marge] - [Marge N-1], [Marge N-1])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 02. N-1
+		lineageTag: a5df8e3b-3bb3-46fa-80b7-03237753a52e
+
+	measure 'Var Clients %' = DIVIDE([Nb Clients] - [Nb Clients N-1], [Nb Clients N-1])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 02. N-1
+		lineageTag: 432335c7-2a99-4541-b394-117d49a0fd5a
+
+	measure 'Var Panier %' = DIVIDE([Panier moyen] - [Panier moyen N-1], [Panier moyen N-1])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 02. N-1
+		lineageTag: e8fedd49-bd37-4cb1-8050-5dd68cdd38be
+
+	measure 'CA Promo' = CALCULATE([CA], DimPromo[PromoFlag] = 1)
+		formatString: "£"#,0.###############;-"£"#,0.###############;"£"#,0.###############
+		displayFolder: 03. Promo
+		lineageTag: 1c9fd305-a2c9-4ed4-bf96-310e070e6e63
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-GB"}
+
+	measure 'Part CA promo' = DIVIDE([CA Promo], [CA])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 03. Promo
+		lineageTag: 35c4b784-9970-47b4-ad54-ef0e92fe8fd7
+
+	measure 'Remise moyenne' = CALCULATE(AVERAGE(FactVentes[TauxRemise]), DimPromo[PromoFlag] = 1)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 03. Promo
+		lineageTag: 202cc0a1-7f50-4a62-a67b-1e570b7aac47
+
+	measure 'Unités par jour' = DIVIDE([Unités], COUNTROWS(FactVentes))
+		formatString: 0.0
+		displayFolder: 03. Promo
+		lineageTag: 4ad65bfe-ef3b-4300-8b1a-e8c32d31bc49
+
+	measure 'CA par jour' = DIVIDE([CA], COUNTROWS(FactVentes))
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		displayFolder: 03. Promo
+		lineageTag: 43760107-26b8-46a8-a069-b6c4659f92e3
+
+	measure 'Marge par jour' = DIVIDE([Marge], COUNTROWS(FactVentes))
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		displayFolder: 03. Promo
+		lineageTag: ffb8bbe1-8a1d-4e6b-9a05-7f2b45d616a0
+
+	measure 'Uplift unités promo %' =
+			
+			DIVIDE(
+			    CALCULATE([Unités par jour], DimPromo[PromoFlag] = 1),
+			    CALCULATE([Unités par jour], DimPromo[PromoFlag] = 0)
+			) - 1
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 03. Promo
+		lineageTag: fe42dac8-8f0e-4892-a8a7-fe139c619060
+
+	measure 'Uplift CA promo %' =
+			
+			DIVIDE(
+			    CALCULATE([CA par jour], DimPromo[PromoFlag] = 1),
+			    CALCULATE([CA par jour], DimPromo[PromoFlag] = 0)
+			) - 1
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 03. Promo
+		lineageTag: 3a6175c4-b212-460c-8ce4-5312e608a31b
+
+	measure 'Impact marge promo %' =
+			
+			DIVIDE(
+			    CALCULATE([Marge par jour], DimPromo[PromoFlag] = 1),
+			    CALCULATE([Marge par jour], DimPromo[PromoFlag] = 0)
+			) - 1
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 03. Promo
+		lineageTag: bca0a604-35e4-44ae-8406-6a0152ae0f14
+
+	measure 'KPI Sélectionné' =
+			
+			SWITCH(
+			    SELECTEDVALUE('KPI'[KPI Order], 0),
+			    0, [CA],
+			    1, [Nb Clients],
+			    2, [Marge]
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		displayFolder: 04. Top-Flop
+		lineageTag: 0cb039ce-1292-45b8-af94-daf2e580c648
+
+	measure 'Titre Top' = "Top 10 magasins - " & SELECTEDVALUE('KPI'[KPI Order], "CA")
+		displayFolder: 04. Top-Flop
+		lineageTag: 72617379-2a6c-4b61-8176-a0265fe12d33
+
+	measure 'Taux de marge N-1' = CALCULATE([Taux de marge], SAMEPERIODLASTYEAR(DimDate[Date]))
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 02. N-1
+		lineageTag: 36a0bbc7-5cf4-45ca-bd57-26066868aeed
+
+	measure 'Remaining Marge' = 1 - [Taux de marge]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 8734f0a2-ad4d-4abb-bdf0-8739ec0d1b37
+
+	measure 'User Greeting' = ```
+			
+			VAR CurrentHour = HOUR(NOW())
+			VAR TimeGreeting = 
+			    SWITCH(
+			        TRUE(),
+			        CurrentHour < 12, "Good morning",
+			        CurrentHour < 18, "Good afternoon",
+			        "Good evening,"
+			    )
+			VAR RawUser = "Phichet PHUANGKAEO"
+			VAR ExtractedName = 
+			    IF(
+			        CONTAINSSTRING(RawUser, "@"),
+			        LEFT(RawUser, FIND("@", RawUser) - 1),
+			        IF(
+			            CONTAINSSTRING(RawUser, "\"),
+			            MID(RawUser, FIND("\", RawUser) + 1, 100),
+			            RawUser
+			        )
+			    )
+			VAR CleanName = SUBSTITUTE(ExtractedName, ".", " ")
+			RETURN
+			    TimeGreeting & UNICHAR(10) & CleanName
+			```
+		lineageTag: fd0ce1a7-b55f-4309-929c-972355abb00d
+
+	measure 'Titre Page Top Flop' =
+			
+			VAR vAnnee = SELECTEDVALUE(DimDate[Année], "2024-2025")
+			VAR vRegion =
+			    IF(ISFILTERED(DimMagasin[Region]),
+			       CONCATENATEX(VALUES(DimMagasin[Region]), DimMagasin[Region], ", "),
+			       "Toutes régions")
+			VAR vFormat =
+			    IF(ISFILTERED(DimMagasin[Format]),
+			       CONCATENATEX(VALUES(DimMagasin[Format]), DimMagasin[Format], ", "),
+			       "Tous formats")
+			VAR vCategorie =
+			    IF(ISFILTERED(DimCategorie[Categorie]),
+			       CONCATENATEX(VALUES(DimCategorie[Categorie]), DimCategorie[Categorie], ", "),
+			       "Toutes catégories")
+			VAR vKPI =
+			    SWITCH(SELECTEDVALUE('KPI'[KPI Order], 0), 0, "CA", 1, "Nb Clients", 2, "Marge")
+			RETURN
+			"Top / Flop magasins par " & vKPI & "  |  " & vAnnee & "  ·  " & vRegion & "  ·  " & vFormat & "  ·  " & vCategorie
+		lineageTag: 46f43da7-f2b0-45d9-944e-62739315c48c
+
+	measure 'Titre Volume' =
+			
+			"Volume : " & FORMAT([Uplift unités promo %], "+0%;-0%") & " d'unités en promo"
+		lineageTag: c42e1468-bdbc-4466-8cea-e4df7429ee29
+
+	measure 'Titre CA promo' =
+			
+			"CA : " & FORMAT([Uplift CA promo %], "+0.0%;-0.0%") & " par jour de promo"
+		lineageTag: 8f344faa-aa78-42f9-acef-525c9f3c16a7
+
+	measure 'Titre Marge promo' =
+			
+			"Marge : " & FORMAT([Impact marge promo %], "+0.0%;-0.0%") & " par jour de promo"
+		lineageTag: b8c3fd55-8411-4ddf-bea4-825ca7111fbd
+
+	measure 'Titre Page Promo' =
+			
+			VAR vAnnee = SELECTEDVALUE(DimDate[Année], "2024-2025")
+			VAR vRegion =
+			    IF(ISFILTERED(DimMagasin[Region]),
+			       CONCATENATEX(VALUES(DimMagasin[Region]), DimMagasin[Region], ", "),
+			       "Toutes régions")
+			VAR vFormat =
+			    IF(ISFILTERED(DimMagasin[Format]),
+			       CONCATENATEX(VALUES(DimMagasin[Format]), DimMagasin[Format], ", "),
+			       "Tous formats")
+			VAR vCategorie =
+			    IF(ISFILTERED(DimCategorie[Categorie]),
+			       CONCATENATEX(VALUES(DimCategorie[Categorie]), DimCategorie[Categorie], ", "),
+			       "Toutes catégories")
+			RETURN
+			"Promotions  |  " & vAnnee & "  ·  " & vRegion & "  ·  " & vFormat & "  ·  " & vCategorie
+		lineageTag: 1a7340ad-be2f-405e-92ae-0bbf97339a91
+
+	partition measurement = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+

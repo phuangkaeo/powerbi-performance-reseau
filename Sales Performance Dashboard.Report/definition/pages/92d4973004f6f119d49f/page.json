@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "92d4973004f6f119d49f",
+  "displayName": "Tendances & N-1",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "visualInteractions": [
+    {
+      "source": "db0842e2f6b07308d7f5",
+      "target": "0a580505f5e8a382fbb8",
+      "type": "NoFilter"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+table DimPromo
+	lineageTag: deeadf99-2f0a-433c-847f-3fddb250da78
+
+	column PromoFlag
+		dataType: int64
+		formatString: 0
+		lineageTag: b217648c-1f44-4479-a070-0781d952c410
+		summarizeBy: none
+		sourceColumn: PromoFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	column Promo
+		dataType: string
+		lineageTag: 1911bfd2-75a8-45c6-b75e-5daa7af6242d
+		summarizeBy: none
+		sourceColumn: Promo
+		sortByColumn: PromoFlag
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimPromo = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [PromoFlag = Int64.Type, Promo = text],
+				        {{0, "Hors promo"}, {1, "En promo"}}
+				    )
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
